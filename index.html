@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>未来を創るアイデアの芽吹き - Garrawy F ビジネスアイデア分析レポート</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f7f9fc;
+            --card-bg: #ffffff;
+            --primary-text: #4a4a4a;
+            --heading-text: #2c3e50;
+            --accent-color-1: #a2d2ff;
+            --accent-color-2: #bde0fe;
+            --accent-color-3: #ffafcc;
+            --accent-color-4: #ffc8dd;
+            --accent-color-5: #cdb4db;
+            --shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+            --border-radius: 15px;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, var(--accent-color-1), var(--accent-color-3));
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        section {
+            padding: 60px 20px;
+            margin-bottom: 30px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--heading-text);
+            text-align: center;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color-2), var(--accent-color-4));
+            border-radius: 2px;
+        }
+        
+        .section-intro {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 50px auto;
+            font-size: 1.1rem;
+            color: #6c757d;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        #ideaChart {
+            max-width: 400px;
+            max-height: 400px;
+        }
+        
+        .total-ideas {
+            text-align: center;
+        }
+
+        .total-ideas .count {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--heading-text);
+            display: block;
+        }
+
+        .total-ideas .label {
+            font-size: 1.2rem;
+            color: var(--primary-text);
+        }
+
+        .keyword-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .keyword-card {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            border: 1px solid #eef2f7;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .keyword-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+        }
+
+        .keyword-card h3 {
+            margin-top: 0;
+            font-size: 1.3rem;
+            color: var(--heading-text);
+            display: flex;
+            align-items: center;
+        }
+        
+        .keyword-card h3 .icon {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .keyword-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .keyword-card li {
+            background-color: var(--bg-color);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-weight: 400;
+            color: var(--primary-text);
+            border-left: 4px solid;
+        }
+        
+        .card-1 li { border-color: #6fa8dc; }
+        .card-2 li { border-color: #ffd966; }
+        .card-3 li { border-color: #a6d854; }
+        .card-4 li { border-color: #e5c494; }
+        .card-5 li { border-color: #b3b3b3; }
+        .card-6 li { border-color: #8da0cb; }
+        .card-7 li { border-color: #fc8d62; }
+        .card-8 li { border-color: #e78ac3; }
+        
+        .overlap-section {
+            text-align: center;
+        }
+        
+        .overlap-keywords {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .overlap-keyword {
+            background: linear-gradient(135deg, var(--accent-color-2), var(--accent-color-5));
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .analysis-card {
+            background-color: var(--bg-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+        }
+
+        .analysis-card h3 {
+            margin-top: 0;
+            color: var(--heading-text);
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        
+        .analysis-card ul {
+            padding-left: 20px;
+        }
+        
+        .insight {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-top: 40px;
+            text-align: center;
+            border: 2px dashed var(--accent-color-1);
+        }
+
+        .insight p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>未来を創るアイデアの芽吹き</h1>
+        <p>Garrawy F ビジネスアイデア分析レポート</p>
+    </header>
+
+    <div class="container">
+
+        <section>
+            <div style="text-align: center;"><h2>集まったアイデアの全体像</h2></div>
+            <p class="section-intro">
+                Garrawy Fに集まった、未来をより良くするためのビジネスアイデア。ここでは、その全体像をご紹介します。
+                総数4,491件もの熱意あるアイデアが、どの社会課題に寄せられたのか見てみましょう。
+            </p>
+            <div class="chart-container">
+                <div class="total-ideas">
+                    <span class="label">寄せられたアイデア総数</span>
+                    <span class="count">4,491</span>
+                </div>
+                <canvas id="ideaChart"></canvas>
+            </div>
+        </section>
+
+        <section>
+            <div style="text-align: center;"><h2>各カテゴリを彩る、個性豊かなキーワード</h2></div>
+            <p class="section-intro">
+                たくさんのアイデアの中に登場する言葉たち。ここでは、他の分野とは重ならない、
+                各社会課題の「個性」を映し出すユニークなキーワードを覗いてみましょう。
+            </p>
+            <div class="keyword-grid">
+                <div class="keyword-card card-1">
+                    <h3><span class="icon">💡</span>① 人口減少</h3>
+                    <ul><li>子供</li><li>子育て</li><li>支援</li><li>家族</li><li>所得</li></ul>
+                </div>
+                <div class="keyword-card card-2">
+                    <h3><span class="icon">💡</span>② 高齢化社会</h3>
+                    <ul><li>高齢者</li><li>介護</li><li>健康</li><li>孤独</li><li>活用</li></ul>
+                </div>
+                <div class="keyword-card card-3">
+                    <h3><span class="icon">💡</span>③ 教育改革</h3>
+                    <ul><li>教育</li><li>学校</li><li>学ぶ</li><li>学生</li><li>スキル</li></ul>
+                </div>
+                 <div class="keyword-card card-4">
+                    <h3><span class="icon">💡</span>④ 過疎化</h3>
+                    <ul><li>地方</li><li>観光</li><li>活性化</li><li>移住</li><li>交流</li></ul>
+                </div>
+                <div class="keyword-card card-5">
+                    <h3><span class="icon">💡</span>⑤ 安全保障</h3>
+                    <ul><li>ドローン</li><li>防災</li><li>食料</li><li>システム</li><li>犯罪</li></ul>
+                </div>
+                <div class="keyword-card card-6">
+                    <h3><span class="icon">💡</span>⑥ 経済成長</h3>
+                    <ul><li>経済</li><li>投資</li><li>起業</li><li>市場</li><li>労働</li></ul>
+                </div>
+                <div class="keyword-card card-7">
+                    <h3><span class="icon">💡</span>⑦ 日本文化・伝統の保護</h3>
+                    <ul><li>文化</li><li>伝統</li><li>保護</li><li>職人</li><li>歴史</li></ul>
+                </div>
+                <div class="keyword-card card-8">
+                    <h3><span class="icon">💡</span>⑧ 移動の問題</h3>
+                    <ul><li>交通</li><li>自動運転</li><li>交通弱者</li><li>物流</li><li>MaaS</li></ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="overlap-section">
+            <div style="text-align: center;"><h2>意外な共通点から見えてくる、課題解決の新たな視点</h2></div>
+             <p class="section-intro">
+                一見すると異なる社会課題。でも、その解決策を探る言葉には、驚くべき共通点がありました。
+                分野を横断して現れるこれらのキーワードは、これからの社会を考える上での大切なヒントかもしれません。
+            </p>
+             <div class="overlap-keywords">
+                <span class="overlap-keyword">企業</span>
+                <span class="overlap-keyword">地域</span>
+                <span class="overlap-keyword">AI</span>
+                <span class="overlap-keyword">日本</span>
+             </div>
+             <p style="margin-top: 30px; max-width: 700px; margin-left: auto; margin-right: auto;">
+                これらの言葉は、多くの課題が「企業」を担い手とし、「地域」を舞台に、「AI」などのテクノロジーを活用しながら、「日本」全体で取り組むべきテーマとして捉えられていることを示しています。
+             </p>
+        </section>
+
+        <section>
+            <div style="text-align: center;"><h2>アイデアのカタチとテクノロジーへの眼差し</h2></div>
+            <p class="section-intro">
+                アイデアはどんな「カタチ」で生まれ、新しい技術とどう向き合おうとしているのでしょうか。
+                ここからは、アイデアの傾向と、未来を創るテクノロジーへの期待と少しの不安を見ていきます。
+            </p>
+             <div class="analysis-grid">
+                <div class="analysis-card">
+                    <h3>アイデアの類型化</h3>
+                    <p>ほとんどのアイデアは、モノを作る「製品開発型」や仕組みを作る「プラットフォーム型」よりも、人の役に立つことを直接行う**「サービス提供型」**が中心でした。これは、課題解決が、誰かの困りごとに寄り添うことから始まる、という温かい視点を反映しているようです。</p>
+                </div>
+                 <div class="analysis-card">
+                    <h3>テクノロジーに対する認識</h3>
+                    <p>AIやドローンといった技術には、多くの期待が寄せられています。</p>
+                    <ul>
+                        <li><strong>期待😊:</strong> 人手不足の解消、作業の効率化、新しいサービスの創出など、ポジティブな活用法が数多く提案されています。</li>
+                        <li><strong>懸念🤔:</strong> 一方で、文化や伝統、安全を守る分野では、技術が仕事を奪う可能性や、デジタル格差が生まれることへの慎重な意見も見られました。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+             <div style="text-align: center;"><h2>全体考察：アイデアのタネから見える未来</h2></div>
+             <div class="insight">
+                <p>
+                    今回集まった4,491件のアイデアは、単なる思いつきではありません。それは、社会をより良くしたいと願う一人ひとりの温かい眼差しそのものです。<br><br>
+                    分析を通して見えてきたのは、課題解決の主役が「企業」であり、その舞台が「地域」であること。そして、AIなどの新しい技術を、人の温かみを失わずに活用しようとする未来像でした。<br><br>
+                    ここにある一つひとつのアイデアが、やて芽吹き、豊かな未来を創る大樹となる。Garrawy Fは、そんな可能性を信じています。
+                </p>
+             </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; Garrawy F</p>
+    </footer>
+
+    <script>
+        const ctx = document.getElementById('ideaChart').getContext('2d');
+        const ideaChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['教育改革', '経済成長', '日本文化・伝統の保護', '過疎化', '人口減少', '移動の問題', '高齢化社会', '安全保障'],
+                datasets: [{
+                    label: 'ビジネスアイデア件数',
+                    data: [977, 662, 619, 529, 520, 498, 467, 219],
+                    backgroundColor: [
+                        '#a6d854', // light green
+                        '#8da0cb', // purple blue
+                        '#fc8d62', // orange
+                        '#e5c494', // beige
+                        '#6fa8dc', // blue
+                        '#e78ac3', // pink
+                        '#ffd966', // yellow
+                        '#b3b3b3'  // grey
+                    ],
+                    borderColor: '#ffffff',
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                family: "'Noto Sans JP', sans-serif",
+                                size: 14
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                    const percentage = (context.parsed / total * 100).toFixed(1);
+                                    label += context.raw + '件 (' + percentage + '%)';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
+
